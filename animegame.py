@@ -15,29 +15,34 @@ class Anime:
         self.synonyms = synonyms
         self.type = type
 
-animelist = []
+animeList = []
 
-animelist.append(Anime("Kanojo Okarishimasu", ["Rent a Girlfriend", "Rental Girlfriend"], "Anime").__dict__)
-animelist.append(Anime("Mayoiga", ["The Lost Village", "Mayoiga"], "Anime").__dict__)
+# animeList.append(Anime("Kanojo Okarishimasu", ["Rent a Girlfriend", "Rental Girlfriend"], "Anime").__dict__) # Creates an anime
+# animeList.append(Anime("Mayoiga", ["The Lost Village", "Mayoiga"], "Anime").__dict__) # Creates an anime
 
 
 
-json.dump(animelist, open("anime.json", "w"), indent=4) # Dumps the list of dictionary versions of the Anime objects to anime.json
+# json.dump(animeList, open("anime.json", "w"), indent=4) # Dumps the list of dictionary versions of the Anime objects to anime.json
 
-with open("anime.json","r") as dumpedJson:
-    JsonData = dumpedJson.read()
+with open("anime.json","r") as dumpedJson: # Opens the database file
+    JsonData = dumpedJson.read() # Saves the data in the file to "JsonData"
 
 a = json.loads(JsonData)
 
-animelist = []
+animeList = []
+movieList = []
+allList = []
 for x in a:
     # print(x, "\n", type(x), "\n")
     print("\n")
     print(x["name"], "is the name")
     print(x["synonyms"][0], "and", x["synonyms"][1], "are what some other people might call it")
     print(x["type"], "is the type")
-    animelist.append(x)
-    print(x, type(x))
+    if (x["type"] is "Anime"):
+        animeList.append(x)
+    elif (x["type"] is "Movie"):
+        movieList.append(x)
+    allList.append(x)
 
 root = tk.Tk()
 root.title("Anime Game")
