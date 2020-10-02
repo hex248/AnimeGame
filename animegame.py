@@ -1,18 +1,43 @@
-import tkinter as tk
-import string
+import json
 import Levenshtein
 import random
-
+import string
 import time
+import tkinter as tk
 
-start = time.perf_counter()
+# End of imports
 
-animeFile = open("anime.txt", "r")
+start = time.perf_counter() # Starts a counter to measure the exit time of the script
+
+class Anime:
+    def __init__(self, name, synonyms, type):
+        self.name = name
+        self.synonyms = synonyms
+        self.type = type
 
 animelist = []
 
-for anime in animeFile:
-    animelist.append(anime)
+animelist.append(Anime("Kanojo Okarishimasu", ["Rent a Girlfriend", "Rental Girlfriend"], "Anime").__dict__)
+animelist.append(Anime("Mayoiga", ["The Lost Village", "Mayoiga"], "Anime").__dict__)
+
+
+
+json.dump(animelist, open("anime.json", "w"), indent=4) # Dumps the list of dictionary versions of the Anime objects to anime.json
+
+with open("anime.json","r") as dumpedJson:
+    JsonData = dumpedJson.read()
+
+a = json.loads(JsonData)
+
+animelist = []
+for x in a:
+    # print(x, "\n", type(x), "\n")
+    print("\n")
+    print(x["name"], "is the name")
+    print(x["synonyms"][0], "and", x["synonyms"][1], "are what some other people might call it")
+    print(x["type"], "is the type")
+    animelist.append(x)
+    print(x, type(x))
 
 root = tk.Tk()
 root.title("Anime Game")
@@ -20,19 +45,15 @@ root.title("Anime Game")
 canvas = tk.Canvas(root, width = 800, height = 800)
 canvas.pack()
 
-animeButtonImage = tk.PhotoImage(file = "./Assets/AnimeButton.png")
-animeButton = tk.Button(canvas, image = animeButtonImage, borderwidth=0, relief = "sunken", command = lambda: ButtonClick(animeButton))
-animeButton.place(relx = 0.25, rely = 0.5, anchor = "center")
+animeButtonImage = tk.PhotoImage(file = "./Assets/AnimeButton.png") # Gets the image for the anime button
+animeButton = tk.Button(canvas, image = animeButtonImage, borderwidth=0, relief = "sunken", command = lambda: ButtonClick(animeButton)) # Creates the button
+animeButton.place(relx = 0.2, rely = 0.5, anchor = "center") # Places the button
 
-movieButtonImage = tk.PhotoImage(file = "./Assets/MovieButton.png")
-movieButton = tk.Button(canvas, image = movieButtonImage, borderwidth=0, relief = "sunken", command = lambda: ButtonClick(movieButton))
-movieButton.place(relx = 0.5, rely = 0.5, anchor = "center")
+movieButtonImage = tk.PhotoImage(file = "./Assets/MovieButton.png") # Gets the image for the movie button
+movieButton = tk.Button(canvas, image = movieButtonImage, borderwidth=0, relief = "sunken", command = lambda: ButtonClick(movieButton)) # Creates the button
+movieButton.place(relx = 0.5, rely = 0.5, anchor = "center") # Places the button
 
-hentaiButtonImage = tk.PhotoImage(file = "./Assets/HentaiButton.png")
-hentaiButton = tk.Button(canvas, image = hentaiButtonImage, borderwidth=0, relief = "sunken", command = lambda: ButtonClick(hentaiButton))
-hentaiButton.place(relx = 0.75, rely = 0.5, anchor = "center")
-
-homeButtons = [animeButton, movieButton, hentaiButton]
+homeButtons = [animeButton, movieButton]
 
 # userEntry = tk.Entry(canvas, font = ("Arial", "30"))
 # userEntry.place(relx = 0.5, rely = 0.94, relwidth = 0.95, anchor = "center")
@@ -47,9 +68,9 @@ def ButtonClick(button):
 
             button.place_forget()
 
-finish = time.perf_counter()
+finish = time.perf_counter() # Ends the counter started in line 10
 
-print(f"Finished in {round(finish-start, 1)} seconds(s)")
+print(f"Exited in {round(finish-start, 2)} seconds(s)") # Prints the time taken to run
 
 
 
