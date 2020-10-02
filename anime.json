@@ -1,18 +1,102 @@
 [
     {
-        "name": "Kanojo Okarishimasu",
-        "synonyms": [
-            "Rent a Girlfriend",
-            "Rental Girlfriend"
-        ],
-        "type": "Anime"
+        "name": "_Summer",
+        "synonyms": [],
+        "type": "OVA \u00e2\u20ac\u00a2 2 episodes"
     },
     {
-        "name": "Mayoiga",
-        "synonyms": [
-            "The Lost Village",
-            "Mayoiga"
-        ],
-        "type": "Anime"
+        "name": "_Summer Specials",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 2 episodes"
+    },
+    {
+        "name": "?/Sankaku no Rhythm/Trump no Arasoi",
+        "synonyms": [],
+        "type": "Movie \u00e2\u20ac\u00a2 4 mins"
+    },
+    {
+        "name": ".hack//G.U. Returner",
+        "synonyms": [],
+        "type": "OVA \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": ".hack//G.U. Trilogy",
+        "synonyms": [],
+        "type": "Movie \u00e2\u20ac\u00a2 1 hour, 33 mins"
+    },
+    {
+        "name": ".hack//G.U. Trilogy: Parody Mode",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": ".hack//Gift",
+        "synonyms": [],
+        "type": "OVA \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": ".hack//Intermezzo",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": ".hack//Liminality",
+        "synonyms": [],
+        "type": "OVA \u00e2\u20ac\u00a2 4 episodes"
+    },
+    {
+        "name": ".hack//Quantum",
+        "synonyms": [],
+        "type": "OVA \u00e2\u20ac\u00a2 3 episodes"
+    },
+    {
+        "name": ".hack//Quantum Specials",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 3 episodes"
+    },
+    {
+        "name": ".hack//Roots",
+        "synonyms": [],
+        "type": "TV Show \u00e2\u20ac\u00a2 26 episodes"
+    },
+    {
+        "name": ".hack//Sign",
+        "synonyms": [],
+        "type": "TV Show \u00e2\u20ac\u00a2 26 episodes"
+    },
+    {
+        "name": ".hack//Tasogare no Udewa Densetsu",
+        "synonyms": [],
+        "type": "TV Show \u00e2\u20ac\u00a2 12 episodes"
+    },
+    {
+        "name": ".hack//Tasogare no Udewa Densetsu - Offline de Aimashou",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": ".hack//The Movie: Sekai no Mukou ni",
+        "synonyms": [],
+        "type": "Movie \u00e2\u20ac\u00a2 1 hour, 50 mins"
+    },
+    {
+        "name": ".hack//Unison",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": ".hack//Versus: The Thanatos Report",
+        "synonyms": [],
+        "type": "Special \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": "\"0\"",
+        "synonyms": [],
+        "type": "Music \u00e2\u20ac\u00a2 1 episode"
+    },
+    {
+        "name": "\"Eiji\"",
+        "synonyms": [],
+        "type": "OVA \u00e2\u20ac\u00a2 1 episode"
     }
 ]
