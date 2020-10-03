@@ -17,10 +17,6 @@ class Anime:
 
 animeList = []
 
-# animeList.append(Anime("Kanojo Okarishimasu", ["Rent a Girlfriend", "Rental Girlfriend"], "Anime").__dict__) # Creates an anime
-# animeList.append(Anime("Mayoiga", ["The Lost Village", "Mayoiga"], "Anime").__dict__) # Creates an anime
-
-
 
 # json.dump(animeList, open("anime.json", "w"), indent=4) # Dumps the list of dictionary versions of the Anime objects to anime.json
 
@@ -33,16 +29,13 @@ animeList = []
 movieList = []
 allList = []
 for x in a:
-    # print(x, "\n", type(x), "\n")
-    print("\n")
-    print(x["name"], "is the name")
-    print(x["synonyms"][0], "and", x["synonyms"][1], "are what some other people might call it")
-    print(x["type"], "is the type")
-    if (x["type"] is "Anime"):
+    if (x["type"] is "TV"):
         animeList.append(x)
     elif (x["type"] is "Movie"):
         movieList.append(x)
-    allList.append(x)
+    if (x["type"] == "TV" or x["type"] == "Movie"):
+        allList.append(x)
+    
 
 root = tk.Tk()
 root.title("Anime Game")
