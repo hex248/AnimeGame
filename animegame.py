@@ -20,7 +20,7 @@ animeList = []
 
 # json.dump(animeList, open("anime.json", "w"), indent=4) # Dumps the list of dictionary versions of the Anime objects to anime.json
 
-with open("anime.json","r") as dumpedJson: # Opens the database file
+with open("anime.json","r", encoding = "utf-8") as dumpedJson: # Opens the database file
     JsonData = dumpedJson.read() # Saves the data in the file to "JsonData"
 
 a = json.loads(JsonData)

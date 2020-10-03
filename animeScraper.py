@@ -99,7 +99,7 @@ for row in rows:
 
 
 
-json.dump(scrapedList, open("anime.json", "w"), indent=4) # Dumps the list of dictionary versions of the Anime objects to anime.json
+json.dump(scrapedList, open("anime.json", "w", encoding = "utf-8"), indent = 4, ensure_ascii = False) # Dumps the list of dictionary versions of the Anime objects to anime.json
 
 print(scrapedList)
 
