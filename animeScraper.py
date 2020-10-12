@@ -1,111 +1,189 @@
-from urllib.request import urlopen as uReq
-
-from bs4 import BeautifulSoup as soup
+import datetime
 import json
 import time
 import requests
-from lxml import html
+from bs4 import BeautifulSoup as soup
 
 class Anime:
-    def __init__(self, name, synonyms, type):
-        self.name = name
-        self.synonyms = synonyms
+    def __init__(self, japanese, othernames, type, aired, genres):
+        self.japanese = japanese
+        self.othernames = othernames
         self.type = type
+        self.aired = aired
+        self.genres = genres
 
 start = time.perf_counter()
-
 
 scrapedList = []
 ignoreList = []
 
-with open('Assets/animepaheList.html', 'r', encoding = "utf8") as f:
-    contents = f.read()
+animePage = requests.get("https://gogoanime.so/anime-list-0")
 
-anime_soup = soup(contents, "html.parser") # Gets the soup of the html file
+anime_soup = soup(animePage.text, "html.parser") # Gets the soup of the html file
+rows = anime_soup.findAll("li", {"class":"first-char"}) # Finds each row (#, A, B, C, D etc.)
 
-tabContent = anime_soup.find("div", {"class":"tab-content"}) # Gets the main content of the page
-rows = tabContent.findAll("div", {"class":"row"}) # Finds each row (#, A, B, C, D etc.)
+rows.remove(rows[0])
+
+previousEntry = "EMPTY STRING"
+
+print(rows)
+
 for row in rows:
 
-    animelist = row.findAll("a")
+    a = row.find("a")
 
-    for ani in animelist:
+    row_link = "https://gogoanime.so" + a["href"]
 
+    page = requests.get(row_link)
 
-        # Get individual page link
-
-        anime_link = ani["href"]
-
-        print("Link:", anime_link) # Prints the link
-
-        page = requests.get(anime_link) # Requests the html of the link
-
-        page_soup = soup(page.text, "html.parser") # Creates a soup of the new html
+    page_soup = soup(page.text, "html.parser")
+    
+    pagination = page_soup.find("div", {"class":"anime_name_pagination"})
 
 
-        # Get Japanese title
 
-        try:
+    pagesHrefs = []
 
-            japaneseTitle = page_soup.find("h2", {"japanese"}) # Finds the h2 tag with "japanese"
+    pages = pagination.findAll("li")
+    if (pages):
 
-            japanese_name = japaneseTitle.text.strip() # Gets the text for the japanese name
-
-        except:
-
-            japanese_name = "" # If there is no Japanese name, set it to an empty string
+        for page in pages:
+            href = page.find("a")["href"]
+            print(href)
+            pagesHrefs.append(row_link + href)
             
-        print(japanese_name)
+    else:
+
+        pagesHrefs = [row_link]
 
 
-        # Get English title
+    for page in pagesHrefs:
+        
+        print("Found page", page, "in", pagesHrefs)
 
-        anime_info = page_soup.find("div", {"class":"anime-info"}) # Gets the info panel
+        pageNo = requests.get(page)
 
-        englishStrong = anime_info.find("strong", text = "English: ") # Gets the strong with the text: "English:"
+        page_soup = soup(pageNo.text, "html.parser")
 
-        try:
-            
-            english_name = englishStrong.next_sibling # Gets the sibling of the strong
+        body = page_soup.find("div", {"class": "anime_list_body"})
 
-        except:
+        entries = body.findAll("li")
 
-            english_name = "" # If there is no sibling of the strong, add it to the ignore list
+        for entry in entries:
 
-        if (japanese_name == "" and english_name == ""):
+            a = entry.find("a")
 
-            ignoreList.append(japanese_name)
+            anime_link = "https://gogoanime.so" + a["href"]
 
-        if (not ignoreList.__contains__(japanese_name)):
+            page = requests.get(anime_link)
 
-            print("Japanese:", japanese_name) # Prints "Japanese: [japanese_name]"
-
-            print("English:", english_name) # Prints "English: [english_name]"
-
-            # Get type
-
-            typeStrong = anime_info.find("strong", text = "Type:") # Finds the "Type:" strong within the info panel
-
-            animeP = typeStrong.find_parent("p").getText() # Gets all of the text displayed in the p tag which is the parent of <strong>Type:</strong>
-
-            anime_type = animeP.replace("Type: ", "") # Removes "Type: " from the string
-
-            print("Type:", anime_type,"\n") # Prints "Type: [type]"
+            page_soup = soup(page.text, "html.parser")
 
 
-            if (anime_type == "TV" or "MOVIE" or "ONA"): # If it is a show or a movie
 
-                scrapedList.append(Anime(japanese_name, [english_name], anime_type).__dict__) # Creates an anime entry with all of the data that was just collected
+            # Get Japanese name
+
+            japanese_name = page_soup.find("h1").text.strip()
+
+            if ("(Dub)" in japanese_name or "Season" in japanese_name or "Movie" in japanese_name or previousEntry in japanese_name or japanese_name in previousEntry):
+
+                ignoreList.append(japanese_name)
+
+            if (not ignoreList.__contains__(japanese_name)):
+
+                previousEntry = japanese_name
+                
+                print("\n")
+                print(japanese_name)
+
+
+
+                # Get Other names
+
+                othernamesSpan = page_soup.find("span", text = "Other name: ")
+
+                othernamesSpanParent = othernamesSpan.parent
+
+                othernames = []
+
+                if (len(othernamesSpanParent.text.strip()) > 12): # If there are any other names (https://gogoanime.so/category/227 is an example of an entry without)
+
+                    othernames = othernamesSpanParent.text.strip().split("Other name: ")[1]
+
+                    othernames = othernames.split(", ")
+
+                print("Other Names:", othernames)
+
+
+
+                # Get Type
+
+                typeSpan = page_soup.find("span", text = "Type: ")
+
+                typeSpanParent = typeSpan.parent
+
+                anime_type = typeSpanParent.find("a").text.strip()
+
+                # Make types more uniform (Fall 2020 Anime = TV and TV Series = TV)
+
+                if ("Anime" in anime_type or "TV" in anime_type):
+                    anime_type = "TV"
+                elif ("OVA" in anime_type):
+                    anime_type = "OVA"
+                elif ("ONA" in anime_type):
+                    anime_type = "ONA"
+                elif ("Special" in anime_type):
+                    anime_type = "Special"
+                elif ("Music" in anime_type):
+                    anime_type = "Music"
+                elif ("Movie" in anime_type):
+                    anime_type = "Movie"
+
+                print("Type:", anime_type)
+
+
+
+                # Get Date
+
+                dateSpan = page_soup.find("span", text = "Released: ")
+
+                anime_date = "Unknown"
+
+                if (len(dateSpan.parent.text.strip()) > 10): # If there is a release date (https://gogoanime.so/category/xia-gan-yi-dan-shen-jianxin is an example of an entry without)
+
+                    anime_date = dateSpan.parent.text.strip().split("Released: ")[1]
+
+                print("Date:", anime_date)
+
+
+
+                # Get Genres
+
+                genresSpan = page_soup.find("span", text = "Genre: ")
+
+                genresSpanParent = genresSpan.parent
+
+                genres = []
+
+                genresA = genresSpanParent.findAll("a")
+
+                for genre in genresA:
+
+                    genre = genre.text.strip().split(", ")
+
+                    genre = genre[len(genre) - 1]
+
+                    genres.append(genre)
+
+                print("Genres:", genres)
+
+                scrapedList.append(Anime(japanese_name, othernames, anime_type, anime_date, genres).__dict__)
 
 
 
 json.dump(scrapedList, open("anime.json", "w", encoding = "utf-8"), indent = 4, ensure_ascii = False) # Dumps the list of dictionary versions of the Anime objects to anime.json
 
 print(scrapedList)
-
-
-
-
 
 finish = time.perf_counter()
 
